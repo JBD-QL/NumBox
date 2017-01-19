@@ -44,40 +44,39 @@ $(document).ready(function() {
     const box2 = Number($('#b2').text());
     const box3 = Number($('#b3').text());
     const box4 = Number($('#b4').text());
-
-    let body = {
-      "query": `mutation numberSaver {post: saveNums(box1: ${box1}, box2: ${box2}, box3: ${box3}, box4: ${box4}) { box1 box2 box3 box4 } }`
-    };
-
-    $.post('/graphql', body, (res) => {
-      console.log('saved:', res);
+    const obj = JSON.stringify({
+      box1: box1,
+      box2: box2,
+      box3: box3,
+      box4: box4
     });
-
-    // axios({
-    //   method: 'post',
-    //   url: '/graphql',
-    //   data:  body
-    // }).then((result) => {
-    //   console.log('hello from post request: ', result.data.data);
-    // });
-
+    $.ajax({
+      type: 'POST',
+      url: '/nums',
+      data: obj,
+      contentType: "application/json",
+      success: (data) => {
+        console.log('Saved data:', data);
+      }
+    });
   });
 
   $('#get_button').on('click', function() {
-    let body = {
-      "query": "query { getNums { box1, box2, box3, box4} }" 
-    };
-
-    $.post('/graphql', body, (res) => {
-      console.log('retrieved:', res.data);
-      const b1 = res.data.getNums.box1;
-      const b2 = res.data.getNums.box2;
-      const b3 = res.data.getNums.box3;
-      const b4 = res.data.getNums.box4;
-      $('#b1').text(b1);
-      $('#b2').text(b2);
-      $('#b3').text(b3);
-      $('#b4').text(b4);
-    })
+    $.ajax({
+      type: 'GET',
+      url: '/nums',
+      contentType: "application/json",
+      success: (data) => {
+        console.log('Previous nums:', data);
+        const b1 = data.box1;
+        const b2 = data.box2;
+        const b3 = data.box3;
+        const b4 = data.box4;
+        $('#b1').text(b1);
+        $('#b2').text(b2);
+        $('#b3').text(b3);
+        $('#b4').text(b4);
+      }
+    });
   });
 });
