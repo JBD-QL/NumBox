@@ -10,7 +10,7 @@ import {
   GraphQLNonNull
 } from 'graphql';
 
-const NumBoxModel = require('./server/models/numBoxModel');
+const NumBoxModel = require('./models/numBoxModel');
 
 const numBoxType = new GraphQLObjectType({
   name: 'Nums',
